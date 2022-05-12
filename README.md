@@ -142,7 +142,7 @@ interface ComputedFluidValues {
 
 ## CSS Variable Version
 
-If you are looking for a "plain" CSS version of this plugin, checkout this
+If you are looking for a "plain" CSS version of this library, checkout this
 [Gist](https://gist.github.com/asyarb/162bf0a8b5d238de01bd2832094727ad).
 
 ## License
