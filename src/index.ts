@@ -1,13 +1,13 @@
 import { precomputeValues, type FontMetrics } from '@capsizecss/core'
 
-function v(min: FluidFontSize, max: FluidFontSize) {
+function v(min: FluidFontSizeOptions, max: FluidFontSizeOptions) {
   const numerator = 100 * (max.fontSize - min.fontSize)
   const denominator = max.screenSize - min.screenSize
 
   return numerator / denominator
 }
 
-function r(min: FluidFontSize, max: FluidFontSize) {
+function r(min: FluidFontSizeOptions, max: FluidFontSizeOptions) {
   const numerator =
     min.screenSize * max.fontSize - max.screenSize * min.fontSize
   const denominator = min.screenSize - max.screenSize
@@ -15,17 +15,26 @@ function r(min: FluidFontSize, max: FluidFontSize) {
   return numerator / denominator
 }
 
-export interface FluidFontSize {
+export interface FluidFontSizeOptions {
   fontSize: number
   screenSize: number
 }
 
 export interface FluidCapsizeOptions {
-  min: FluidFontSize
-  max: FluidFontSize
+  min: FluidFontSizeOptions
+  max: FluidFontSizeOptions
   lineHeight: number
   rootFontSize: number
   fontMetrics: FontMetrics
+}
+
+export interface ComputedFluidValues {
+  minFontSize: string
+  maxFontSize: string
+  baselineTrim: string
+  capHeightTrim: string
+  vw: string
+  rem: string
 }
 
 export function precomputeFluidValues({
@@ -34,7 +43,7 @@ export function precomputeFluidValues({
   lineHeight,
   rootFontSize,
   fontMetrics,
-}: FluidCapsizeOptions) {
+}: FluidCapsizeOptions): ComputedFluidValues {
   const { baselineTrim, capHeightTrim } = precomputeValues({
     fontMetrics,
     fontSize: min.fontSize,
@@ -54,7 +63,21 @@ export function precomputeFluidValues({
   }
 }
 
-export function createFluidStyleObject(arg: FluidCapsizeOptions) {
+interface PseudoStyles {
+  content: string
+  display: 'table'
+}
+
+export interface FluidStyleObject {
+  fontSize: string
+  lineHeight: string
+  '::before': PseudoStyles & { marginBottom: string }
+  '::after': PseudoStyles & { marginTop: string }
+}
+
+export function createFluidStyleObject(
+  arg: FluidCapsizeOptions
+): FluidStyleObject {
   const values = precomputeFluidValues(arg)
 
   return {
@@ -78,7 +101,7 @@ export function createFluidStyleObject(arg: FluidCapsizeOptions) {
 export function createFluidStyleString(
   ruleName: string,
   arg: FluidCapsizeOptions
-) {
+): string {
   const {
     '::after': afterPseudo,
     '::before': beforePseudo,
