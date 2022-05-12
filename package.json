@@ -5,6 +5,9 @@
   "repository": "https://github.com/asyarb/capsize-fluid",
   "author": "Anthony Yarbrough <asyarb@hawaii.edu>",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
